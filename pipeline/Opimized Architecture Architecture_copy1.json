@@ -163,14 +163,7 @@
 			{
 				"name": "ForEach_ADLS_Curated_SQL_Polybase",
 				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "ScaleUpVM",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
@@ -408,7 +401,25 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"url": " https://management.azure.com/subscriptions/XXX/resourceGroups/XXX/providers/Microsoft.Synapse/workspaces/XXX/sqlPools/XXX/?api-version=2019-06-01-preview",
+					"method": "PUT",
+					"headers": {
+						"Content-Type": " application/json"
+					},
+					"body": {
+						"sku": {
+							"name": "GP_Gen5_6",
+							"tier": "GeneralPurpose"
+						},
+						"location": "eastus"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": " https://management.azure.com"
+					}
+				}
 			},
 			{
 				"name": "ScaleDownVM",
@@ -429,6 +440,22 @@
 					"secureInput": false
 				},
 				"userProperties": []
+			},
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "ScaleUpVM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 10
+				}
 			}
 		],
 		"annotations": []
