@@ -123,6 +123,9 @@
 								"secureInput": false
 							},
 							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[monitoring]"
+							},
 							"linkedServiceName": {
 								"referenceName": "AzureSynapseAnalytics1",
 								"type": "LinkedServiceReference"
@@ -162,8 +165,47 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"enableStaging": false
-							}
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "SqlDWSink",
+									"allowPolyBase": true,
+									"polyBaseSettings": {
+										"rejectValue": 0,
+										"rejectType": "value",
+										"useTypeDefault": true
+									}
+								},
+								"enableStaging": true,
+								"stagingSettings": {
+									"linkedServiceName": {
+										"referenceName": "vmproject",
+										"type": "LinkedServiceReference"
+									},
+									"path": "synapsestaging"
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DataSetDataLake",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SynapseDataset",
+									"type": "DatasetReference"
+								}
+							]
 						},
 						{
 							"name": "Stored procedure2",
