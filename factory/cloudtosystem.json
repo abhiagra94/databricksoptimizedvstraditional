@@ -1,0 +1,9 @@
+{
+	"name": "cloudtosystem",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "6d9f93a3-2422-4ab1-98a8-3b098f9cb39c",
+		"tenantId": "93e6beba-c4aa-4731-af5d-d735b097eadb"
+	}
+}
