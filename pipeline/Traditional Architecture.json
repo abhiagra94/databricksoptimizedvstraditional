@@ -46,7 +46,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy data1",
+							"name": "VMtoDataLake",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -93,7 +93,17 @@
 							"outputs": [
 								{
 									"referenceName": "DataSetDataLake",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"Foldername": {
+											"value": "@item().SourceSchema\r\n",
+											"type": "Expression"
+										},
+										"FileName": {
+											"value": "@item().SourceTable\r\n",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						},
@@ -102,7 +112,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Copy data1",
+									"activity": "VMtoDataLake",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -117,7 +127,23 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[monitoring]"
+								"storedProcedureName": "[dbo].[monitoring]",
+								"storedProcedureParameters": {
+									"status": {
+										"value": {
+											"value": "@activity('VMtoDataLake').Status",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"tablename": {
+										"value": {
+											"value": "@item().SourceTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
 							},
 							"linkedServiceName": {
 								"referenceName": "AzureSynapseAnalytics1",
