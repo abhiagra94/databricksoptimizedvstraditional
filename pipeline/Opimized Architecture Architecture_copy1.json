@@ -163,7 +163,14 @@
 			{
 				"name": "ForEach_ADLS_Curated_SQL_Polybase",
 				"type": "ForEach",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Wait1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
@@ -422,7 +429,23 @@
 				}
 			},
 			{
-				"name": "ScaleDownVM",
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "ScaleUpVM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 10
+				}
+			},
+			{
+				"name": "ScaleUpVM_copy1",
 				"type": "WebActivity",
 				"dependsOn": [
 					{
@@ -439,22 +462,24 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
-			},
-			{
-				"name": "Wait1",
-				"type": "Wait",
-				"dependsOn": [
-					{
-						"activity": "ScaleUpVM",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
 				"userProperties": [],
 				"typeProperties": {
-					"waitTimeInSeconds": 10
+					"url": " https://management.azure.com/subscriptions/XXX/resourceGroups/XXX/providers/Microsoft.Synapse/workspaces/XXX/sqlPools/XXX/?api-version=2019-06-01-preview",
+					"method": "PUT",
+					"headers": {
+						"Content-Type": " application/json"
+					},
+					"body": {
+						"sku": {
+							"name": "Basic",
+							"tier": "Basic"
+						},
+						"location": "eastus"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": " https://management.azure.com"
+					}
 				}
 			}
 		],
