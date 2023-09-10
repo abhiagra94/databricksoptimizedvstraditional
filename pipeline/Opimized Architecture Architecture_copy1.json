@@ -179,7 +179,7 @@
 					},
 					"activities": [
 						{
-							"name": "DataLaketoSynapse",
+							"name": "DataLaketoSynapsee",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -223,7 +223,17 @@
 							"inputs": [
 								{
 									"referenceName": "DataSetDataLake",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"Foldername": {
+											"value": "@item().DataLakeFileName",
+											"type": "Expression"
+										},
+										"FileName": {
+											"value": "@item().DataLakeFolder",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
@@ -238,7 +248,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "DataLaketoSynapse",
+									"activity": "DataLaketoSynapsee",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -257,7 +267,7 @@
 								"storedProcedureParameters": {
 									"status": {
 										"value": {
-											"value": "@activity('DataLaketoSynapse').Status",
+											"value": "@activity('DataLaketoSynapsee').Status",
 											"type": "Expression"
 										},
 										"type": "String"
