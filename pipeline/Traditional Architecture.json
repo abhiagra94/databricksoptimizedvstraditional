@@ -172,7 +172,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy data2",
+							"name": "DataLaketoSQL",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -197,20 +197,49 @@
 								},
 								"sink": {
 									"type": "SqlDWSink",
-									"allowCopyCommand": true
+									"writeBehavior": "Insert",
+									"sqlWriterUseTableLock": false
 								},
-								"enableStaging": false
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
 									"referenceName": "DataSetDataLake",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"Foldername": {
+											"value": "@item().DataLakeFolder\r\n",
+											"type": "Expression"
+										},
+										"FileName": {
+											"value": "@item().DataLakeFileName\r\n",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
 								{
 									"referenceName": "SynapseDataset",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"Schema": {
+											"value": "@item().SQLSchema\r\n",
+											"type": "Expression"
+										},
+										"TableName": {
+											"value": "@item().SQLTableName\r\n",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						},
@@ -219,7 +248,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Copy data2",
+									"activity": "DataLaketoSQL",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -234,7 +263,23 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[monitoring]"
+								"storedProcedureName": "[dbo].[monitoring]",
+								"storedProcedureParameters": {
+									"status": {
+										"value": {
+											"value": "@activity('DataLaketoSQL').Status",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"tablename": {
+										"value": {
+											"value": "@item().DataLakeFileName\r\n",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
 							},
 							"linkedServiceName": {
 								"referenceName": "AzureSynapseAnalytics1",
