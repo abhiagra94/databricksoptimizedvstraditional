@@ -165,7 +165,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Execute Pipeline Traditional",
+						"activity": "ScaleUpVM",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -389,6 +389,46 @@
 						"resource": "https://management.azure.com"
 					}
 				}
+			},
+			{
+				"name": "ScaleUpVM",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline Traditional",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "ScaleDownVM",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "ForEach_ADLS_Curated_SQL_Polybase",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
 			}
 		],
 		"annotations": []
