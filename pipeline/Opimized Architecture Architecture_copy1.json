@@ -94,7 +94,17 @@
 							"inputs": [
 								{
 									"referenceName": "SQLVM",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"Schema": {
+											"value": "@item().SourceSchema",
+											"type": "Expression"
+										},
+										"TableName": {
+											"value": "@item().SourceTable\r\n",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
@@ -124,7 +134,23 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[monitoring]"
+								"storedProcedureName": "[dbo].[monitoring]",
+								"storedProcedureParameters": {
+									"status": {
+										"value": {
+											"value": "@activity('Copy data1').Status",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"tablename": {
+										"value": {
+											"value": "@item().SourceTable",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
 							},
 							"linkedServiceName": {
 								"referenceName": "AzureSynapseAnalytics1",
