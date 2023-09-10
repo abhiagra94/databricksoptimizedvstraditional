@@ -30,7 +30,8 @@
 					"dataset": {
 						"referenceName": "Metadata",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -103,6 +104,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_Metadata').output.value",
+						"type": "Expression"
+					},
 					"activities": [
 						{
 							"name": "Copy data2",

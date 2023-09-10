@@ -1,0 +1,12 @@
+{
+	"name": "SQLVM",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SQLLinkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
