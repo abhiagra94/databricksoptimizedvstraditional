@@ -1,5 +1,5 @@
 {
-	"name": "Notebook Traditional",
+	"name": "Notebook Optimized",
 	"properties": {
 		"activities": [
 			{
@@ -50,7 +50,7 @@
 				}
 			},
 			{
-				"name": "Transformation Traditional",
+				"name": "Transformation Optimized",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
@@ -77,11 +77,11 @@
 				}
 			},
 			{
-				"name": "Optimized Final Transformation",
+				"name": "Opimized Final Transformation",
 				"type": "DatabricksNotebook",
 				"dependsOn": [
 					{
-						"activity": "Transformation Traditional",
+						"activity": "Transformation Optimized",
 						"dependencyConditions": [
 							"Succeeded"
 						]
