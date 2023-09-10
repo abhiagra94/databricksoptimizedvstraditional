@@ -69,7 +69,7 @@
 				}
 			},
 			{
-				"name": "ForEach_ADLS_Curated_SQL",
+				"name": "ForEach_ADLS_Curated_SQL_Polybase",
 				"type": "ForEach",
 				"dependsOn": [
 					{
