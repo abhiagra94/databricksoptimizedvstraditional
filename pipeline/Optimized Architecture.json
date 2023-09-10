@@ -22,6 +22,25 @@
 						"resource": "https://management.azure.com"
 					}
 				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "get status of VM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('get status of vm').output.statuses[1].displayStatus,'VM stopped')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"annotations": []
