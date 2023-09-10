@@ -138,7 +138,7 @@
 								"storedProcedureParameters": {
 									"status": {
 										"value": {
-											"value": "@activity('Copy data1').Status",
+											"value": "@activity('VMtoSQL').Status",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -179,7 +179,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy data2",
+							"name": "DataLaketoSynapse",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -234,11 +234,11 @@
 							]
 						},
 						{
-							"name": "Stored procedure2",
+							"name": "Monitoring",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Copy data2",
+									"activity": "DataLaketoSynapse",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -253,7 +253,23 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[monitoring]"
+								"storedProcedureName": "[dbo].[monitoring]",
+								"storedProcedureParameters": {
+									"status": {
+										"value": {
+											"value": "@activity('DataLaketoSynapse').Status",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"tablename": {
+										"value": {
+											"value": "@item().DataLakeFileName\r\n",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
 							},
 							"linkedServiceName": {
 								"referenceName": "AzureSynapseAnalytics1",
