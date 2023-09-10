@@ -20,7 +20,18 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Metadata",
+						"type": "DatasetReference"
+					}
+				}
 			},
 			{
 				"name": "ForEach_OnPremise to ADLS",
@@ -35,6 +46,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_Metadata').output.value",
+						"type": "Expression"
+					},
 					"activities": [
 						{
 							"name": "Copy data1",
