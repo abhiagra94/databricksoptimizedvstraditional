@@ -5,7 +5,14 @@
 			{
 				"name": "Lookup_Metadata",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "If Condition_stop_start",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -126,7 +133,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "ForEach_OnPremise to ADLS",
+						"activity": "stop VM",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -142,7 +149,7 @@
 				}
 			},
 			{
-				"name": "get Status",
+				"name": "get status of vm",
 				"type": "WebActivity",
 				"dependsOn": [],
 				"policy": {
@@ -163,17 +170,74 @@
 				}
 			},
 			{
-				"name": "If Condition1",
+				"name": "If Condition_stop_start",
 				"type": "IfCondition",
 				"dependsOn": [
 					{
-						"activity": "get Status",
+						"activity": "get status of vm",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('get status of vm').output.statuses[1].displayStatus,'VM stopped')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "start",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"url": "https://management.azure.com/da370257-2498-44ad-9942-2460d992c3c5/resourceGroups/azuretocomputer/providers/Microsoft.Compute/virtualMachines/start/InstanceView?api-version=2021-07-01",
+								"method": "GET",
+								"authentication": {
+									"type": "MSI",
+									"resource": "https://management.azure.com"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "stop VM",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "ForEach_OnPremise to ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://management.azure.com/da370257-2498-44ad-9942-2460d992c3c5/resourceGroups/azuretocomputer/providers/Microsoft.Compute/virtualMachines/stop/InstanceView?api-version=2021-07-01",
+					"method": "GET",
+					"authentication": {
+						"type": "MSI",
+						"resource": "https://management.azure.com"
+					}
+				}
 			}
 		],
 		"annotations": []
